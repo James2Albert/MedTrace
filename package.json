@@ -1,0 +1,31 @@
+{
+  "name": "medical-supply-donation-tracker",
+  "version": "1.0.0",
+  "description": "Blockchain Medical Supply Donation Tracking System Powered By Ethereum",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "dev": "lite-server",
+    "test": "truffle test",
+    "copy-contract": "cp build/contracts/MedicalSupplyDonation.json src/MedicalSupplyDonation.json",
+    "migrate:reset": "truffle migrate --reset && npm run copy-contract"
+  },
+  "author": "gregory@dappuniversity.com",
+  "license": "ISC",
+  "devDependencies": {
+    "bootstrap": "^4.6.2",
+    "chai": "^4.3.10",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^3.1.0",
+    "lite-server": "^2.6.1",
+    "nodemon": "^3.0.3",
+    "truffle": "^5.11.5",
+    "truffle-contract": "^4.0.31",
+    "web3": "^1.10.0"
+  },
+  "dependencies": {
+    "@truffle/contract": "^4.6.31"
+  }
+}

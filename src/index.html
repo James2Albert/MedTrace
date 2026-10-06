@@ -6,352 +6,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Allow unsafe-eval for Web3.js 1.x (required for contract ABI calls). Use only for local/dev. -->
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://code.jquery.com;">
-    <title>Medical Supply Donation Tracker</title>
+    <title>MedTrace · Donor ledger (legacy)</title>
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <style>
-      :root {
-        --primary-color: #2563eb;
-        --secondary-color: #10b981;
-        --danger-color: #ef4444;
-        --warning-color: #f59e0b;
-        --info-color: #3b82f6;
-        --dark-color: #1e293b;
-        --light-bg: #f8fafc;
-        --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        --card-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      }
-
-      * {
-        font-family: 'Inter', sans-serif;
-      }
-
-      body {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        padding-top: 80px;
-      }
-
-      .navbar {
-        background: rgba(255, 255, 255, 0.95) !important;
-        backdrop-filter: blur(10px);
-        box-shadow: var(--card-shadow);
-      }
-
-      .navbar-brand {
-        font-weight: 700;
-        color: var(--primary-color) !important;
-        font-size: 1.25rem;
-      }
-
-      .account-badge {
-        font-family: 'Courier New', monospace;
-        background: linear-gradient(135deg, var(--primary-color), var(--info-color));
-        color: white;
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 500;
-      }
-
-      .main-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-      }
-
-      .card {
-        border: none;
-        border-radius: 16px;
-        box-shadow: var(--card-shadow);
-        transition: all 0.3s ease;
-        background: white;
-      }
-
-      .card:hover {
-        box-shadow: var(--card-shadow-hover);
-        transform: translateY(-2px);
-      }
-
-      .card-header {
-        background: linear-gradient(135deg, var(--primary-color), var(--info-color));
-        color: white;
-        border-radius: 16px 16px 0 0 !important;
-        padding: 20px;
-        font-weight: 600;
-        border: none;
-      }
-
-      .card-body {
-        padding: 24px;
-      }
-
-      .btn-primary {
-        background: linear-gradient(135deg, var(--primary-color), var(--info-color));
-        border: none;
-        border-radius: 8px;
-        padding: 10px 24px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-      }
-
-      .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-      }
-
-      .btn-success {
-        background: linear-gradient(135deg, var(--secondary-color), #059669);
-        border: none;
-        border-radius: 8px;
-        padding: 10px 24px;
-        font-weight: 500;
-      }
-
-      .btn-warning {
-        background: linear-gradient(135deg, var(--warning-color), #d97706);
-        border: none;
-        border-radius: 8px;
-        padding: 10px 24px;
-        font-weight: 500;
-        color: white;
-      }
-
-      .status-badge {
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 500;
-        display: inline-block;
-      }
-
-      .status-created {
-        background: #dbeafe;
-        color: #1e40af;
-      }
-
-      .status-intransit {
-        background: #fef3c7;
-        color: #92400e;
-      }
-
-      .status-received {
-        background: #d1fae5;
-        color: #065f46;
-      }
-
-      .status-distributed {
-        background: #e0e7ff;
-        color: #3730a3;
-      }
-
-      .status-completed {
-        background: #dcfce7;
-        color: #166534;
-      }
-
-      .donation-card {
-        border-left: 4px solid var(--primary-color);
-        margin-bottom: 16px;
-        transition: all 0.3s ease;
-      }
-
-      .donation-card:hover {
-        border-left-width: 6px;
-      }
-
-      .donation-card.created {
-        border-left-color: #3b82f6;
-      }
-
-      .donation-card.intransit {
-        border-left-color: #f59e0b;
-      }
-
-      .donation-card.received {
-        border-left-color: #10b981;
-      }
-
-      .donation-card.distributed {
-        border-left-color: #8b5cf6;
-      }
-
-      .donation-card.completed {
-        border-left-color: #059669;
-      }
-
-      .form-control, .form-select {
-        border-radius: 8px;
-        border: 1px solid #e5e7eb;
-        padding: 10px 16px;
-        transition: all 0.3s ease;
-      }
-
-      .form-control:focus, .form-select:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-      }
-
-      .loader {
-        min-height: 400px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-      }
-
-      .spinner-border {
-        width: 3rem;
-        height: 3rem;
-        border-width: 0.3em;
-      }
-
-      .stats-card {
-        background: linear-gradient(135deg, var(--primary-color), var(--info-color));
-        color: white;
-        border-radius: 12px;
-        padding: 20px;
-        text-align: center;
-      }
-
-      .stats-card.success {
-        background: linear-gradient(135deg, var(--secondary-color), #059669);
-      }
-
-      .stats-card.warning {
-        background: linear-gradient(135deg, var(--warning-color), #d97706);
-      }
-
-      .stats-number {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin: 10px 0;
-      }
-
-      .stats-label {
-        font-size: 0.9rem;
-        opacity: 0.9;
-      }
-
-      .modal-content {
-        border-radius: 16px;
-        border: none;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-      }
-
-      .modal-header {
-        background: linear-gradient(135deg, var(--primary-color), var(--info-color));
-        color: white;
-        border-radius: 16px 16px 0 0;
-        border: none;
-      }
-
-      .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        color: #6b7280;
-      }
-
-      .empty-state i {
-        font-size: 4rem;
-        margin-bottom: 20px;
-        opacity: 0.5;
-      }
-
-      .user-info {
-        background: var(--light-bg);
-        border-radius: 12px;
-        padding: 16px;
-        margin-bottom: 20px;
-      }
-
-      .role-badge {
-        display: inline-block;
-        padding: 4px 12px;
-        border-radius: 12px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        margin-left: 8px;
-      }
-
-      .role-donor {
-        background: #dbeafe;
-        color: #1e40af;
-      }
-
-      .role-ngo {
-        background: #fef3c7;
-        color: #92400e;
-      }
-
-      .role-healthcare {
-        background: #d1fae5;
-        color: #065f46;
-      }
-
-      #content {
-        display: none;
-      }
-
-      .section-title {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--dark-color);
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .section-title i {
-        color: var(--primary-color);
-      }
-    </style>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400;1,9..144,600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/theme.css">
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-          <i class="bi bi-heart-pulse-fill"></i> Medical Supply Donation Tracker
+    <header class="masthead">
+      <div class="masthead-inner">
+        <a class="wordmark" href="#" aria-label="MedTrace home">
+          <svg class="wordmark-glyph" viewBox="0 0 40 40" aria-hidden="true">
+            <path d="M15.5 4.5h9v11h11v9h-11v11h-9v-11h-11v-9h11z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+            <path d="M8 20.5h7l2.5-5 4 10 2.5-5h8" fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Med<em>Trace</em></span>
         </a>
-        <span class="navbar-text">
-          <small class="account-badge" id="account">Not Connected</small>
-          <small class="account-badge ms-2" id="network" style="background: linear-gradient(135deg, #f59e0b, #d97706); display: none;">Network: Unknown</small>
-          <button type="button" class="btn btn-sm btn-outline-light ms-2" id="refreshAccount" title="Refresh account info">
-            <i class="bi bi-arrow-clockwise"></i> Refresh
+
+        <div class="masthead-tools">
+          <button type="button" class="wallet-pill" id="account" aria-label="Copy wallet address">Not Connected</button>
+          <span class="network-chip" id="network" style="display:none;">Network: Unknown</span>
+          <button type="button" class="icon-btn theme-toggle" id="themeToggle" aria-label="Toggle dark mode"><i class="bi bi-moon-stars-fill"></i></button>
+          <button type="button" class="icon-btn" id="refreshAccount" title="Refresh account info" aria-label="Refresh account info">
+            <i class="bi bi-arrow-clockwise"></i>
           </button>
-        </span>
+        </div>
       </div>
-    </nav>
+    </header>
 
     <div class="main-container">
-      <div id="loader" class="loader text-center">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-        <p class="mt-3 text-white">Loading DApp...</p>
+      <div id="loader" class="loader" style="display:none;">
+        <svg class="ecg" viewBox="0 0 220 60" aria-hidden="true">
+          <path d="M0 32h60l8-14 10 30 12-44 10 40 6-12h114" />
+        </svg>
+        <p>Reading the ledger&hellip;</p>
+        <span class="visually-hidden" role="status">Loading</span>
       </div>
 
+      <section class="hero" aria-label="MedTrace overview">
+        <div class="hero-copy">
+          <p class="kicker">A shared record for relief supplies</p>
+          <h1>
+            From a donor’s hands to a patient’s bedside,
+            <span class="scribble">every handoff
+              <svg viewBox="0 0 300 18" preserveAspectRatio="none" aria-hidden="true"><path d="M3 12c40-7 88-9 140-6 50 3 96 2 154-5"/></svg>
+            </span>
+            is written down.
+          </h1>
+          <p class="lede">
+            MedTrace logs medical donations on Ethereum as they move between donors, NGOs and clinics.
+            Nobody has to take anyone’s word for where a shipment went, because every stop is signed.
+          </p>
+        </div>
+
+        <figure class="hero-route" aria-hidden="true">
+          <svg viewBox="0 0 380 300">
+            <path class="route-path" d="M46 238c34-6 50-44 88-58s72 10 104-16 30-74 94-92"/>
+            <!-- donor: parcel -->
+            <g class="stop" transform="translate(46 238)">
+              <circle r="22" class="stop-disc"/>
+              <path d="M-9-6h18v14h-18z M-9-6l9-5 9 5 M0-11v19" class="stop-ink"/>
+            </g>
+            <!-- ngo: warehouse -->
+            <g class="stop" transform="translate(178 176)">
+              <circle r="22" class="stop-disc"/>
+              <path d="M-10 9v-11l10-7 10 7v11z M-4 9v-7h8v7" class="stop-ink"/>
+            </g>
+            <!-- clinic: cross -->
+            <g class="stop stop--end" transform="translate(332 72)">
+              <circle r="24" class="stop-disc"/>
+              <path d="M-3.5-10h7v6.5h6.5v7h-6.5v6.5h-7v-6.5h-6.5v-7h6.5z" class="stop-fill"/>
+            </g>
+            <text x="16" y="286" class="hand">donor</text>
+            <text x="150" y="222" class="hand">NGO depot</text>
+            <text x="268" y="126" class="hand">ward 4</text>
+            <path class="arrow" d="M244 262c-14-2-26-10-32-24m0 0-2 10m2-10 9 5"/>
+            <text x="250" y="270" class="hand hand--note">signed at every stop</text>
+          </svg>
+        </figure>
+      </section>
+
       <!-- Network Warning Banner -->
-      <div id="networkWarning" class="alert alert-warning alert-dismissible fade show" role="alert" style="display: none; margin: 20px 0; border-radius: 12px; box-shadow: var(--card-shadow);">
-        <h5 class="alert-heading"><i class="bi bi-exclamation-triangle-fill"></i> Wrong Network Detected</h5>
+      <div id="networkWarning" class="alert alert-warning alert-dismissible fade show caution" role="alert" style="display: none;">
+        <h5 class="alert-heading"><i class="bi bi-exclamation-triangle-fill"></i> Wrong network</h5>
         <p id="networkWarningMessage"></p>
         <hr>
         <p class="mb-3">
-          <strong>To fix this automatically:</strong><br>
+          <strong>Quickest fix:</strong><br>
           <button type="button" class="btn btn-primary mt-2" id="switchToLocalNetwork">
-            <i class="bi bi-arrow-repeat"></i> Switch to Local Ganache Network
+            <i class="bi bi-arrow-repeat"></i> Switch to local Ganache
           </button>
         </p>
         <hr>
         <p class="mb-0">
-          <strong>Or manually:</strong><br>
+          <strong>Or do it by hand:</strong><br>
           1. Open MetaMask<br>
           2. Click the network dropdown (top center)<br>
           3. Select "Localhost 8545" or add it manually:<br>
@@ -366,182 +120,202 @@
 
       <div id="content">
         <!-- User Registration Section -->
-        <div id="registrationSection" class="card mb-4">
-          <div class="card-header">
-            <i class="bi bi-person-plus"></i> User Registration
-          </div>
-          <div class="card-body">
-            <div class="alert alert-info mb-3" role="alert">
-              <i class="bi bi-info-circle"></i> <strong>Important:</strong> Each MetaMask account can only register once. 
-              To register a recipient (NGO or Healthcare Facility), use a different MetaMask account or create a new account in MetaMask.
+        <section id="registrationSection" class="sheet register mb-5">
+          <aside class="register-aside">
+            <p class="section-no">01</p>
+            <h2>Sign the register</h2>
+            <p class="aside-lede">Before you can send or receive anything, tell the network who you are. Pick one role per wallet:</p>
+            <ol class="role-list">
+              <li>
+                <span class="role-dot donor"></span>
+                <div><strong>Donor</strong><span>Opens a shipment and names who it’s for.</span></div>
+              </li>
+              <li>
+                <span class="role-dot ngo"></span>
+                <div><strong>NGO</strong><span>Receives stock, moves it on, passes it to partners.</span></div>
+              </li>
+              <li>
+                <span class="role-dot healthcare"></span>
+                <div><strong>Healthcare facility</strong><span>The last stop. Confirms supplies reached patients.</span></div>
+              </li>
+            </ol>
+          </aside>
+
+          <div class="register-form-wrap">
+            <div class="sticky-note" role="note">
+              <strong>Heads up:</strong> each MetaMask account can register once. To add an NGO or clinic, switch to (or create) another account in MetaMask first.
             </div>
-            <form id="registrationForm">
-              <div class="row">
-                <div class="col-md-4 mb-3">
-                  <label class="form-label">Full Name</label>
-                  <input type="text" class="form-control" id="userName" placeholder="e.g., John Doe" required>
+            <form id="registrationForm" class="registration-form">
+              <div class="form-grid">
+                <div class="field">
+                  <label class="form-label" for="userName">Full name</label>
+                  <input type="text" class="form-control" id="userName" placeholder="Amina Juma" required>
                 </div>
-                <div class="col-md-4 mb-3">
-                  <label class="form-label">Organization</label>
-                  <input type="text" class="form-control" id="userOrganization" placeholder="e.g., Red Cross" required>
-                </div>
-                <div class="col-md-4 mb-3">
-                  <label class="form-label">Role</label>
-                  <select class="form-select" id="userRole" required>
-                    <option value="">Select Role</option>
-                    <option value="0">Donor - Can create donations</option>
-                    <option value="1">NGO - Can receive and distribute donations</option>
-                    <option value="2">Healthcare Facility - Can receive donations</option>
-                  </select>
-                  <small class="form-text text-muted">
-                    <i class="bi bi-lightbulb"></i> To register a recipient, select "NGO" or "Healthcare Facility"
-                  </small>
+                <div class="field">
+                  <label class="form-label" for="userOrganization">Organization</label>
+                  <input type="text" class="form-control" id="userOrganization" placeholder="Red Cross, Dodoma" required>
                 </div>
               </div>
+              <div class="field">
+                <label class="form-label" for="userRole">Role</label>
+                <select class="form-select" id="userRole" required>
+                  <option value="">Choose one…</option>
+                  <option value="0">Donor, creates donations</option>
+                  <option value="1">NGO, receives and distributes</option>
+                  <option value="2">Healthcare Facility, receives donations</option>
+                </select>
+                <small id="roleDescription" class="role-description">Choose a role to see how it participates in the donation flow.</small>
+              </div>
               <button type="submit" class="btn btn-primary">
-                <i class="bi bi-check-circle"></i> Register
+                Register this wallet <i class="bi bi-arrow-right"></i>
               </button>
             </form>
           </div>
-        </div>
+        </section>
 
         <!-- User Info Section -->
-        <div id="userInfoSection" class="user-info" style="display: none;">
-          <h5><i class="bi bi-person-circle"></i> User Information</h5>
+        <section id="userInfoSection" class="user-info mb-5" style="display: none;">
+          <div class="badge-clip" aria-hidden="true"></div>
           <div id="userInfoContent"></div>
-          <div class="alert alert-warning mt-3 mb-0" role="alert">
-            <i class="bi bi-exclamation-triangle"></i> <strong>Want to register a recipient?</strong><br>
-            This account is already registered. To register an NGO or Healthcare Facility, switch to a different MetaMask account:
-            <ol class="mb-0 mt-2">
+          <details class="fine-print">
+            <summary>Need to register a recipient too?</summary>
+            <p>This wallet is already on the register. To add an NGO or healthcare facility, use a different MetaMask account:</p>
+            <ol>
               <li>Click the MetaMask extension icon</li>
-              <li>Click the account dropdown (top of MetaMask)</li>
-              <li>Click "Create Account" or select a different account</li>
-              <li>The page will automatically refresh - if not, click: <button type="button" class="btn btn-sm btn-primary ms-2" onclick="window.location.reload()"><i class="bi bi-arrow-clockwise"></i> Refresh Page</button></li>
+              <li>Open the account dropdown at the top</li>
+              <li>Choose “Create Account”, or pick another one</li>
+              <li>The page should refresh on its own. If it doesn’t: <button type="button" class="btn btn-sm btn-outline-secondary ms-1" onclick="window.location.reload()"><i class="bi bi-arrow-clockwise"></i> Refresh page</button></li>
             </ol>
-          </div>
-        </div>
+          </details>
+        </section>
 
         <!-- Statistics Section -->
-        <div class="row mb-4">
-          <div class="col-md-3 mb-3">
-            <div class="stats-card">
-              <div class="stats-label">Total Donations</div>
-              <div class="stats-number" id="totalDonations">0</div>
-            </div>
+        <section class="ledger mb-5" aria-label="Donation totals">
+          <div class="stats-card">
+            <span class="stats-label">On record</span>
+            <div class="stats-number" id="totalDonations">0</div>
+            <span class="stats-note">shipments, all time</span>
           </div>
-          <div class="col-md-3 mb-3">
-            <div class="stats-card success">
-              <div class="stats-label">Completed</div>
-              <div class="stats-number" id="completedDonations">0</div>
-            </div>
+          <div class="stats-card">
+            <span class="stats-label">Delivered</span>
+            <div class="stats-number" id="completedDonations">0</div>
+            <span class="stats-note">made it all the way</span>
           </div>
-          <div class="col-md-3 mb-3">
-            <div class="stats-card warning">
-              <div class="stats-label">In Transit</div>
-              <div class="stats-number" id="inTransitDonations">0</div>
-            </div>
+          <div class="stats-card">
+            <span class="stats-label">On the road</span>
+            <div class="stats-number" id="inTransitDonations">0</div>
+            <span class="stats-note">moving right now</span>
           </div>
-          <div class="col-md-3 mb-3">
-            <div class="stats-card">
-              <div class="stats-label">My Donations</div>
-              <div class="stats-number" id="myDonations">0</div>
-            </div>
+          <div class="stats-card is-mine">
+            <span class="stats-label">Yours</span>
+            <div class="stats-number" id="myDonations">0</div>
+            <span class="stats-note">sent by this wallet</span>
           </div>
-        </div>
+        </section>
 
         <!-- Create Donation Section (for Donors) -->
-        <div id="createDonationSection" class="card mb-4" style="display: none;">
-          <div class="card-header">
-            <i class="bi bi-plus-circle"></i> Create New Donation
-          </div>
-          <div class="card-body">
-            <form id="donationForm">
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label class="form-label">Item Name</label>
-                  <input type="text" class="form-control" id="itemName" placeholder="e.g., Medical Masks" required>
+        <section id="createDonationSection" class="sheet mb-5" style="display: none;">
+          <header class="sheet-head">
+            <p class="section-no">02</p>
+            <div>
+              <h2>Open a new shipment</h2>
+              <p>Fill it in like a packing slip. Everyone down the line will see exactly this.</p>
+            </div>
+          </header>
+          <form id="donationForm" class="donation-form">
+            <div class="form-grid">
+              <div class="field">
+                <label class="form-label" for="itemName">What are you sending?</label>
+                <input type="text" class="form-control" id="itemName" placeholder="Surgical masks" required>
+              </div>
+              <div class="form-grid tight">
+                <div class="field">
+                  <label class="form-label" for="itemQuantity">How many</label>
+                  <input type="number" class="form-control" id="itemQuantity" min="1" placeholder="200" required>
                 </div>
-                <div class="col-md-6 mb-3">
-                  <label class="form-label">Quantity</label>
-                  <input type="number" class="form-control" id="itemQuantity" min="1" required>
+                <div class="field">
+                  <label class="form-label" for="itemUnit">Unit</label>
+                  <input type="text" class="form-control" id="itemUnit" placeholder="boxes" required>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-4 mb-3">
-                  <label class="form-label">Unit</label>
-                  <input type="text" class="form-control" id="itemUnit" placeholder="e.g., boxes, units, kg" required>
-                </div>
-                <div class="col-md-4 mb-3">
-                  <label class="form-label">Recipient</label>
-                  <select class="form-select" id="recipientId" required>
-                    <option value="">Select Recipient</option>
-                  </select>
-                  <small class="form-text text-muted">
-                    <i class="bi bi-info-circle"></i> Recipients must be registered as NGO or Healthcare Facility
-                  </small>
-                </div>
-                <div class="col-md-4 mb-3">
-                  <label class="form-label">Location</label>
-                  <input type="text" class="form-control" id="donationLocation" placeholder="Current location" required>
-                </div>
+            </div>
+            <div class="form-grid">
+              <div class="field">
+                <label class="form-label" for="recipientId">Deliver to</label>
+                <select class="form-select" id="recipientId" required>
+                  <option value="">Select Recipient</option>
+                </select>
+                <small class="field-hint">Only registered NGOs and healthcare facilities show up here.</small>
               </div>
-              <div class="mb-3">
-                <label class="form-label">Description</label>
-                <textarea class="form-control" id="itemDescription" rows="3" placeholder="Detailed description of the donation"></textarea>
+              <div class="field">
+                <label class="form-label" for="donationLocation">Leaving from</label>
+                <input type="text" class="form-control" id="donationLocation" placeholder="Warehouse B, Arusha" required>
               </div>
-              <div class="mb-3">
-                <label class="form-label">Notes</label>
-                <textarea class="form-control" id="donationNotes" rows="2" placeholder="Additional notes"></textarea>
-              </div>
+            </div>
+            <div class="field">
+              <label class="form-label" for="itemDescription">Description</label>
+              <textarea class="form-control" id="itemDescription" rows="3" placeholder="Batch number, expiry, storage needs…"></textarea>
+            </div>
+            <div class="field">
+              <label class="form-label" for="donationNotes">Notes for the handler <span class="optional">optional</span></label>
+              <textarea class="form-control" id="donationNotes" rows="2" placeholder="Keep dry. Call ahead before delivery."></textarea>
+            </div>
+            <div class="form-foot">
               <button type="submit" class="btn btn-primary">
-                <i class="bi bi-send"></i> Create Donation
+                <i class="bi bi-send"></i> Log shipment
               </button>
-            </form>
-          </div>
-        </div>
+              <span class="hand-aside">once it’s on-chain, it stays on-chain</span>
+            </div>
+          </form>
+        </section>
 
         <!-- Donations List Section -->
-        <div class="card">
-          <div class="card-header">
-            <i class="bi bi-list-ul"></i> Donations
-          </div>
-          <div class="card-body">
-            <div id="donationsList"></div>
-            <div id="noDonations" class="empty-state" style="display: none;">
-              <i class="bi bi-inbox"></i>
-              <h5>No donations found</h5>
-              <p>Create your first donation to get started!</p>
+        <section class="manifest">
+          <header class="sheet-head plain">
+            <p class="section-no">03</p>
+            <div>
+              <h2>The manifest</h2>
+              <p>Every shipment on the network, newest handoffs included.</p>
             </div>
+          </header>
+          <div id="donationsList"></div>
+          <div id="noDonations" class="empty-state" style="display: none;">
+            <svg viewBox="0 0 120 90" aria-hidden="true">
+              <path d="M18 34l42-18 42 18v38l-42 16-42-16z M18 34l42 16 42-16 M60 50v38" />
+              <path d="M39 25l42 17" class="dash"/>
+            </svg>
+            <h5>Nothing on the manifest yet</h5>
+            <p>The first shipment you log will show up here.</p>
           </div>
-        </div>
+        </section>
       </div>
     </div>
 
     <!-- Status Update Modal -->
     <div class="modal fade" id="statusModal" tabindex="-1">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title"><i class="bi bi-arrow-repeat"></i> Update Donation Status</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            <h5 class="modal-title">Move it along</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form id="statusForm">
               <input type="hidden" id="statusDonationId">
               <div class="mb-3">
-                <label class="form-label">Current Status</label>
+                <label class="form-label" for="currentStatus">Where it is now</label>
                 <input type="text" class="form-control" id="currentStatus" readonly>
               </div>
               <div class="mb-3">
-                <label class="form-label">New Status</label>
+                <label class="form-label" for="newStatus">Next stop</label>
                 <select class="form-select" id="newStatus" required>
                 </select>
-                <small class="form-text text-muted">
-                  <i class="bi bi-info-circle"></i> Only the next allowed step is shown (workflow: Created → In Transit → Received → Distributed/Completed → Completed). Update again to move to the next step.
+                <small class="field-hint d-block">
+                  Only the next allowed step is offered: Created → In Transit → Received → Distributed → Completed.
                 </small>
               </div>
               <button type="submit" class="btn btn-primary w-100">
-                <i class="bi bi-check-circle"></i> Update Status
+                Sign and update
               </button>
             </form>
           </div>
@@ -551,23 +325,23 @@
 
     <!-- Transfer Modal -->
     <div class="modal fade" id="transferModal" tabindex="-1">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title"><i class="bi bi-arrow-left-right"></i> Transfer Donation</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            <h5 class="modal-title">Hand it over</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form id="transferForm">
               <input type="hidden" id="transferDonationId">
               <div class="mb-3">
-                <label class="form-label">Transfer To</label>
+                <label class="form-label" for="transferRecipientId">New holder</label>
                 <select class="form-select" id="transferRecipientId" required>
                   <option value="">Select Recipient</option>
                 </select>
               </div>
               <button type="submit" class="btn btn-primary w-100">
-                <i class="bi bi-send"></i> Transfer
+                <i class="bi bi-arrow-left-right"></i> Transfer
               </button>
             </form>
           </div>
@@ -575,15 +349,21 @@
       </div>
     </div>
 
+    <footer class="footer">
+      <span>MedTrace</span>
+      <span class="footer-rule" aria-hidden="true"></span>
+      <span>Every handoff is kept by an Ethereum contract instead of a clipboard.</span>
+    </footer>
+
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+
     <!-- Bootstrap 5 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <!-- Web3.js v1.10 -->
     <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
-    
+
     <!-- Your app script -->
     <script src="app.js"></script>
   </body>

@@ -1,0 +1,176 @@
+{
+  "_notice": "MOCK DATA for the MedTrace hackathon demo. Shaped like eLMIS (OpenLMIS v3) shipment payloads. Codes, lots and quantities are illustrative, not real MSD records.",
+  "facilities": [
+    { "code": "MSD-DSM-ZONE", "name": "MSD Dar es Salaam Zonal Store", "type": "Zonal warehouse", "district": "Kinondoni", "region": "Dar es Salaam" },
+    { "code": "HFR-105611", "name": "Chanika Health Centre", "type": "Health centre", "district": "Ilala", "region": "Dar es Salaam" },
+    { "code": "HFR-104287", "name": "Mzinga Dispensary", "type": "Dispensary", "district": "Temeke", "region": "Dar es Salaam" }
+  ],
+  "shipments": [
+    {
+      "id": "6a0f5c1e-3b47-4f0e-9d2a-1c8e7b5a9001",
+      "proofOfDeliveryId": "c3d9a2f4-8e61-4b7a-a0d5-77e2f1b4c101",
+      "shippedDate": "2026-10-06T06:45:00Z",
+      "order": {
+        "orderCode": "ORD-MSD-DSM-2026-10-0412",
+        "program": { "code": "MAL", "name": "National Malaria Control Programme" },
+        "supplyingFacility": { "code": "MSD-DSM-ZONE", "name": "MSD Dar es Salaam Zonal Store" },
+        "receivingFacility": { "code": "HFR-105611", "name": "Chanika Health Centre" },
+        "fundingSource": { "code": "GF-MAL", "name": "Global Fund malaria grant (donor)" }
+      },
+      "lineItems": [
+        {
+          "orderable": { "productCode": "10010047", "fullProductName": "Artemether/Lumefantrine 20mg/120mg tablets", "dispensingUnit": "pack (24 x 6)" },
+          "lot": { "lotCode": "AL2405-117", "expirationDate": "2028-03-31" },
+          "quantityShipped": 240,
+          "packages": 1
+        }
+      ]
+    },
+    {
+      "id": "6a0f5c1e-3b47-4f0e-9d2a-1c8e7b5a9002",
+      "proofOfDeliveryId": "c3d9a2f4-8e61-4b7a-a0d5-77e2f1b4c102",
+      "shippedDate": "2026-10-06T06:50:00Z",
+      "order": {
+        "orderCode": "ORD-MSD-DSM-2026-10-0413",
+        "program": { "code": "RCH", "name": "Reproductive and Child Health" },
+        "supplyingFacility": { "code": "MSD-DSM-ZONE", "name": "MSD Dar es Salaam Zonal Store" },
+        "receivingFacility": { "code": "HFR-105611", "name": "Chanika Health Centre" },
+        "fundingSource": { "code": "UNFPA-RCH", "name": "UNFPA maternal health commodities (donor)" }
+      },
+      "lineItems": [
+        {
+          "orderable": { "productCode": "10020311", "fullProductName": "Oxytocin 10 IU/ml injection, 1 ml ampoule", "dispensingUnit": "ampoule" },
+          "lot": { "lotCode": "OXY2407-052", "expirationDate": "2027-07-31" },
+          "quantityShipped": 500,
+          "packages": 1
+        }
+      ]
+    },
+    {
+      "id": "6a0f5c1e-3b47-4f0e-9d2a-1c8e7b5a9003",
+      "proofOfDeliveryId": "c3d9a2f4-8e61-4b7a-a0d5-77e2f1b4c103",
+      "shippedDate": "2026-10-06T07:05:00Z",
+      "order": {
+        "orderCode": "ORD-MSD-DSM-2026-10-0419",
+        "program": { "code": "ESS", "name": "Essential Medicines" },
+        "supplyingFacility": { "code": "MSD-DSM-ZONE", "name": "MSD Dar es Salaam Zonal Store" },
+        "receivingFacility": { "code": "HFR-104287", "name": "Mzinga Dispensary" },
+        "fundingSource": { "code": "GOT-MOH", "name": "Government of Tanzania, Ministry of Health" }
+      },
+      "lineItems": [
+        {
+          "orderable": { "productCode": "10030118", "fullProductName": "Amoxicillin 250mg dispersible tablets", "dispensingUnit": "pack (10 x 10)" },
+          "lot": { "lotCode": "AMX2406-301", "expirationDate": "2027-12-31" },
+          "quantityShipped": 120,
+          "packages": 1
+        }
+      ]
+    },
+    {
+      "id": "6a0f5c1e-3b47-4f0e-9d2a-1c8e7b5a9004",
+      "proofOfDeliveryId": "c3d9a2f4-8e61-4b7a-a0d5-77e2f1b4c104",
+      "shippedDate": "2026-10-07T06:30:00Z",
+      "order": {
+        "orderCode": "ORD-MSD-DSM-2026-10-0427",
+        "program": { "code": "ESS", "name": "Essential Medicines" },
+        "supplyingFacility": { "code": "MSD-DSM-ZONE", "name": "MSD Dar es Salaam Zonal Store" },
+        "receivingFacility": { "code": "HFR-105611", "name": "Chanika Health Centre" },
+        "fundingSource": { "code": "GOT-MOH", "name": "Government of Tanzania, Ministry of Health" }
+      },
+      "lineItems": [
+        {
+          "orderable": { "productCode": "10040022", "fullProductName": "Oral Rehydration Salts, low osmolarity, 20.5g sachet", "dispensingUnit": "sachet" },
+          "lot": { "lotCode": "ORS2408-019", "expirationDate": "2028-08-31" },
+          "quantityShipped": 2000,
+          "packages": 2
+        }
+      ]
+    },
+    {
+      "id": "6a0f5c1e-3b47-4f0e-9d2a-1c8e7b5a9005",
+      "proofOfDeliveryId": "c3d9a2f4-8e61-4b7a-a0d5-77e2f1b4c105",
+      "shippedDate": "2026-10-07T07:10:00Z",
+      "order": {
+        "orderCode": "ORD-MSD-DSM-2026-10-0431",
+        "program": { "code": "MAL", "name": "National Malaria Control Programme" },
+        "supplyingFacility": { "code": "MSD-DSM-ZONE", "name": "MSD Dar es Salaam Zonal Store" },
+        "receivingFacility": { "code": "HFR-104287", "name": "Mzinga Dispensary" },
+        "fundingSource": { "code": "GF-MAL", "name": "Global Fund malaria grant (donor)" }
+      },
+      "lineItems": [
+        {
+          "orderable": { "productCode": "10050007", "fullProductName": "Malaria rapid diagnostic test (Pf/Pan), 25 tests/kit", "dispensingUnit": "kit" },
+          "lot": { "lotCode": "RDT2409-884", "expirationDate": "2027-09-30" },
+          "quantityShipped": 40,
+          "packages": 1
+        },
+        {
+          "orderable": { "productCode": "10060014", "fullProductName": "Examination gloves, nitrile, medium, box of 100", "dispensingUnit": "box" },
+          "lot": { "lotCode": "GLV2409-120", "expirationDate": "2029-09-30" },
+          "quantityShipped": 60,
+          "packages": 1
+        }
+      ]
+    },
+    {
+      "id": "6a0f5c1e-3b47-4f0e-9d2a-1c8e7b5a9006",
+      "proofOfDeliveryId": "c3d9a2f4-8e61-4b7a-a0d5-77e2f1b4c106",
+      "shippedDate": "2026-10-06T07:20:00Z",
+      "order": {
+        "orderCode": "ORD-MSD-DSM-2026-10-0436",
+        "program": { "code": "IVD", "name": "Immunization and Vaccine Development" },
+        "supplyingFacility": { "code": "MSD-DSM-ZONE", "name": "MSD Dar es Salaam Zonal Store" },
+        "receivingFacility": { "code": "HFR-105611", "name": "Chanika Health Centre" },
+        "fundingSource": { "code": "GAVI", "name": "Gavi vaccine support (donor)" }
+      },
+      "lineItems": [
+        {
+          "orderable": { "productCode": "10070031", "fullProductName": "Tetanus-diphtheria (Td) vaccine, 10-dose vial", "dispensingUnit": "vial", "storage": { "minC": 2, "maxC": 8 } },
+          "lot": { "lotCode": "TD2408-044", "expirationDate": "2028-02-29" },
+          "quantityShipped": 100,
+          "packages": 1
+        }
+      ]
+    },
+    {
+      "id": "6a0f5c1e-3b47-4f0e-9d2a-1c8e7b5a9007",
+      "proofOfDeliveryId": "c3d9a2f4-8e61-4b7a-a0d5-77e2f1b4c107",
+      "shippedDate": "2026-10-06T07:25:00Z",
+      "order": {
+        "orderCode": "ORD-MSD-DSM-2026-10-0437",
+        "program": { "code": "IVD", "name": "Immunization and Vaccine Development" },
+        "supplyingFacility": { "code": "MSD-DSM-ZONE", "name": "MSD Dar es Salaam Zonal Store" },
+        "receivingFacility": { "code": "HFR-105611", "name": "Chanika Health Centre" },
+        "fundingSource": { "code": "GAVI", "name": "Gavi vaccine support (donor)" }
+      },
+      "lineItems": [
+        {
+          "orderable": { "productCode": "10070052", "fullProductName": "Measles-Rubella (MR) vaccine, 10-dose vial", "dispensingUnit": "vial", "storage": { "minC": 2, "maxC": 8 } },
+          "lot": { "lotCode": "MR2409-210", "expirationDate": "2028-06-30" },
+          "quantityShipped": 80,
+          "packages": 1
+        }
+      ]
+    },
+    {
+      "id": "6a0f5c1e-3b47-4f0e-9d2a-1c8e7b5a9008",
+      "proofOfDeliveryId": "c3d9a2f4-8e61-4b7a-a0d5-77e2f1b4c108",
+      "shippedDate": "2026-10-07T07:40:00Z",
+      "order": {
+        "orderCode": "ORD-MSD-DSM-2026-10-0441",
+        "program": { "code": "RCH", "name": "Reproductive and Child Health" },
+        "supplyingFacility": { "code": "MSD-DSM-ZONE", "name": "MSD Dar es Salaam Zonal Store" },
+        "receivingFacility": { "code": "HFR-105611", "name": "Chanika Health Centre" },
+        "fundingSource": { "code": "UNICEF-RCH", "name": "UNICEF maternal nutrition supplies (donor)" }
+      },
+      "lineItems": [
+        {
+          "orderable": { "productCode": "10020044", "fullProductName": "Ferrous sulphate 200mg + folic acid 0.4mg tablets, 1000s", "dispensingUnit": "tin (1000)" },
+          "lot": { "lotCode": "FEF2409-077", "expirationDate": "2029-01-31" },
+          "quantityShipped": 30,
+          "packages": 1
+        }
+      ]
+    }
+  ]
+}

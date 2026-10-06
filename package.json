@@ -1,18 +1,27 @@
 {
-  "name": "medical-supply-donation-tracker",
+  "name": "medtrace",
   "version": "1.0.0",
-  "description": "Blockchain Medical Supply Donation Tracking System Powered By Ethereum",
+  "description": "MedTrace: evidence-based custody and integrity verification for medical supply deliveries (Ethereum smart contract, Node.js API, web app)",
   "main": "truffle-config.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
     "dev": "lite-server",
-    "test": "truffle test",
+    "test": "npm run check && npm run test:custody",
     "copy-contract": "cp build/contracts/MedicalSupplyDonation.json src/MedicalSupplyDonation.json",
-    "migrate:reset": "truffle migrate --reset && npm run copy-contract"
+    "migrate:reset": "truffle migrate --reset && npm run copy-contract",
+    "start": "node server/index.js",
+    "chain": "node scripts/chain.js",
+    "demo": "node scripts/demo.js",
+    "demo:fresh": "node scripts/demo.js --fresh",
+    "demo:reset": "node scripts/demo-reset.js",
+    "compile:custody": "node scripts/compile-custody.js",
+    "test:custody": "node --test --test-concurrency=1 test/custody/*.test.js",
+    "test:truffle": "truffle test",
+    "check": "node scripts/check.js"
   },
-  "author": "gregory@dappuniversity.com",
+  "author": "James Mwingira",
   "license": "ISC",
   "devDependencies": {
     "bootstrap": "^4.6.2",
@@ -23,9 +32,22 @@
     "nodemon": "^3.0.3",
     "truffle": "^5.11.5",
     "truffle-contract": "^4.0.31",
-    "web3": "^1.10.0"
+    "web3": "^1.10.4",
+    "ganache": "^7.9.1"
   },
   "dependencies": {
-    "@truffle/contract": "^4.6.31"
-  }
+    "@truffle/contract": "^4.6.31",
+    "jquery": "^3.7.1",
+    "ethers": "^5.8.0",
+    "express": "^4.22.1"
+  },
+  "keywords": [
+    "medical-supplies",
+    "chain-of-custody",
+    "supply-chain",
+    "ethereum",
+    "solidity",
+    "healthcare"
+  ],
+  "private": true
 }

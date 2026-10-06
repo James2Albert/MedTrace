@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1760 980" width="1760" height="980" font-family="Noto Sans, Segoe UI, Helvetica, Arial, sans-serif">
+  <title>MedTrace technical architecture</title>
+  <desc>Users reach a browser app, which calls an Express API. The API's custody service writes signed custody actions to the MedTraceCustody contract on a local Ganache chain through a relayer, stores evidence off-chain by content hash, keeps records in a JSON database, and exchanges shipments and proof of delivery with a simulated eLMIS.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4a5565"/></marker>
+    <marker id="t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0b5f73"/></marker>
+    <style>
+      .box { fill: #fff; stroke: #b8bec8; stroke-width: 1.5; }
+      .h { font-size: 19px; font-weight: 700; fill: #1b2430; }
+      .s { font-size: 14.5px; fill: #4a5565; }
+      .lbl { font-size: 14px; fill: #1b2430; font-weight: 600; }
+      .zone { font-size: 13px; font-weight: 700; letter-spacing: .08em; }
+      .line { stroke: #4a5565; stroke-width: 2; fill: none; }
+      .chain { stroke: #0b5f73; stroke-width: 2.5; fill: none; }
+      .pill { fill: #fff; }
+    </style>
+  </defs>
+  <rect width="1760" height="980" fill="#f4f5f7"/>
+  <text x="40" y="52" font-size="28" font-weight="700" fill="#1b2430">MedTrace: technical architecture</text>
+  <text x="40" y="82" class="s">Prototype as implemented. On-chain state in teal; off-chain storage in grey; simulated parts dashed amber.</text>
+
+  <!-- actors -->
+  <text x="40" y="128" class="zone" fill="#6b7685">USERS</text>
+  <g>
+    <rect x="40" y="145" width="230" height="110" rx="8" class="box"/>
+    <text x="58" y="180" class="h">Dispatcher</text>
+    <text x="58" y="205" class="s">MSD warehouse</text>
+    <text x="58" y="228" class="s">seals and releases</text>
+    <rect x="40" y="285" width="230" height="110" rx="8" class="box"/>
+    <text x="58" y="320" class="h">Clinic</text>
+    <text x="58" y="345" class="s">receiving facility</text>
+    <text x="58" y="368" class="s">verifies independently</text>
+    <rect x="40" y="425" width="230" height="110" rx="8" class="box"/>
+    <text x="58" y="460" class="h">Auditor</text>
+    <text x="58" y="485" class="s">district pharmacist</text>
+    <text x="58" y="508" class="s">investigates, decides</text>
+  </g>
+
+  <!-- frontend -->
+  <text x="330" y="128" class="zone" fill="#6b7685">BROWSER</text>
+  <rect x="330" y="145" width="270" height="390" rx="8" class="box"/>
+  <text x="350" y="182" class="h">Web app (web/)</text>
+  <text x="350" y="210" class="s">Plain JavaScript, no build</text>
+  <text x="350" y="240" class="s">• role workspaces</text>
+  <text x="350" y="264" class="s">• receiving wizard</text>
+  <text x="350" y="288" class="s">• QR scan (jsQR, offline)</text>
+  <text x="350" y="312" class="s">• photo capture</text>
+  <text x="350" y="336" class="s">• expected vs observed</text>
+  <text x="350" y="360" class="s">• audit exception queue</text>
+  <text x="350" y="384" class="s">• demo hub (demo mode)</text>
+  <text x="350" y="420" class="s">Never holds keys;</text>
+  <text x="350" y="442" class="s">sends answers, not verdicts</text>
+
+  <path d="M270 200 H330" class="line" marker-end="url(#a)"/>
+  <path d="M270 340 H330" class="line" marker-end="url(#a)"/>
+  <path d="M270 480 H330" class="line" marker-end="url(#a)"/>
+  <text x="300" y="580" class="lbl" text-anchor="middle">forms, QR scans, photos</text>
+
+  <!-- backend -->
+  <text x="690" y="128" class="zone" fill="#6b7685">SERVER (Node.js / Express, server/)</text>
+  <rect x="690" y="145" width="430" height="715" rx="10" fill="#e9edf2" stroke="#b8bec8" stroke-width="1.5"/>
+  <g>
+    <rect x="710" y="162" width="390" height="66" rx="6" class="box"/>
+    <text x="726" y="189" class="h">Auth &amp; authorisation</text>
+    <text x="726" y="213" class="s">PIN + lockout · roles · facility scoping</text>
+    <rect x="710" y="245" width="390" height="66" rx="6" class="box"/>
+    <text x="726" y="272" class="h">Verification service</text>
+    <text x="726" y="296" class="s">11 checks → clean receipt or dispute</text>
+    <rect x="710" y="328" width="390" height="66" rx="6" class="box" stroke="#0b5f73"/>
+    <text x="726" y="355" class="h">Custody service + operation journal</text>
+    <text x="726" y="379" class="s">state machine · idempotent · chain-first</text>
+    <rect x="710" y="411" width="390" height="66" rx="6" class="box" stroke="#0b5f73"/>
+    <text x="726" y="438" class="h">Relayer (gas sponsor)</text>
+    <text x="726" y="462" class="s">server-held per-user signing keys</text>
+    <rect x="710" y="494" width="390" height="66" rx="6" class="box"/>
+    <text x="726" y="521" class="h">Audit exceptions &amp; review priority</text>
+    <text x="726" y="545" class="s">rule-based, from stored records only</text>
+    <rect x="710" y="577" width="390" height="66" rx="6" class="box"/>
+    <text x="726" y="604" class="h">Reconciliation</text>
+    <text x="726" y="628" class="s">startup · every 30 s while pending · on demand</text>
+    <rect x="710" y="660" width="390" height="66" rx="6" class="box" stroke="#b07d00" stroke-dasharray="7 5"/>
+    <text x="726" y="687" class="h">Cold-chain analysis</text>
+    <text x="726" y="711" class="s">excursion detection · SIMULATED logger feed</text>
+    <rect x="710" y="743" width="390" height="66" rx="6" class="box"/>
+    <text x="726" y="770" class="h">eLMIS adapter</text>
+    <text x="726" y="794" class="s">OpenLMIS-style mapping · proof of delivery</text>
+  </g>
+
+  <!-- frontend <-> api -->
+  <path d="M600 210 H690" class="line" marker-end="url(#a)"/>
+  <path d="M690 245 H600" class="line" marker-end="url(#a)"/>
+  <text x="645" y="196" class="lbl" text-anchor="middle">REST + token</text>
+  <text x="645" y="268" class="lbl" text-anchor="middle">results,</text>
+  <text x="645" y="288" class="lbl" text-anchor="middle">signed links</text>
+
+  <!-- on-chain zone -->
+  <rect x="1340" y="145" width="380" height="300" rx="10" fill="#e3f0f3" stroke="#0b5f73" stroke-width="2"/>
+  <text x="1360" y="175" class="zone" fill="#0b5f73">ON-CHAIN · GANACHE (LOCAL DEV CHAIN)</text>
+  <rect x="1360" y="192" width="340" height="236" rx="6" class="box" stroke="#0b5f73"/>
+  <text x="1376" y="222" class="h">MedTraceCustody.sol</text>
+  <text x="1376" y="250" class="s">• custody state machine</text>
+  <text x="1376" y="274" class="s">• roles + destination facility</text>
+  <text x="1376" y="298" class="s">• actor signature + nonce</text>
+  <text x="1376" y="322" class="s">• decides RECEIVED vs DISPUTED</text>
+  <text x="1376" y="346" class="s">• stores manifest hash,</text>
+  <text x="1376" y="370" class="s">   evidence CID + SHA-256</text>
+  <text x="1376" y="402" class="s">CustodyEvent log per step</text>
+
+  <!-- off-chain zone -->
+  <rect x="1340" y="485" width="380" height="250" rx="10" fill="#eceef1" stroke="#b8bec8" stroke-width="1.5"/>
+  <text x="1360" y="514" class="zone" fill="#4a5565">OFF-CHAIN STORAGE</text>
+  <rect x="1360" y="528" width="340" height="92" rx="6" class="box"/>
+  <text x="1376" y="555" class="h">Evidence store</text>
+  <text x="1376" y="579" class="s">photos + temperature logs by CID</text>
+  <text x="1376" y="601" class="s">re-hashed on every read · optional IPFS</text>
+  <rect x="1360" y="632" width="340" height="88" rx="6" class="box"/>
+  <text x="1376" y="659" class="h">Database (db.json)</text>
+  <text x="1376" y="683" class="s">shipments · events · journal</text>
+  <text x="1376" y="705" class="s">sessions stored hashed</text>
+
+  <!-- external -->
+  <rect x="1340" y="775" width="380" height="85" rx="10" fill="#fff8e6" stroke="#b07d00" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="1360" y="806" class="h">eLMIS / MSD</text>
+  <text x="1360" y="832" class="s">SIMULATED: mock dataset, local outbox</text>
+
+  <!-- flows -->
+  <path d="M1100 444 C1230 444 1230 300 1360 300" class="chain" marker-end="url(#t)"/>
+  <path d="M1360 400 C1240 400 1240 610 1100 610" class="chain" marker-end="url(#t)"/>
+  <path d="M1100 361 C1260 361 1230 574 1360 574" class="line" marker-end="url(#a)"/>
+  <path d="M1100 380 C1250 380 1220 676 1360 676" class="line" marker-end="url(#a)"/>
+  <path d="M1100 776 C1220 776 1220 818 1340 818" class="line" marker-end="url(#a)" marker-start="url(#a)"/>
+
+  <g font-size="13.5" font-weight="600" text-anchor="middle">
+    <rect x="1133" y="262" width="184" height="44" rx="6" fill="#fff" stroke="#0b5f73"/>
+    <text x="1225" y="280" fill="#0b5f73">signed custody actions</text>
+    <text x="1225" y="298" fill="#0b5f73">(transactions)</text>
+    <rect x="1153" y="470" width="144" height="44" rx="6" fill="#fff" stroke="#0b5f73"/>
+    <text x="1225" y="488" fill="#0b5f73">ledger events,</text>
+    <text x="1225" y="506" fill="#0b5f73">state reads</text>
+    <rect x="1131" y="680" width="188" height="62" rx="6" fill="#fff" stroke="#b8bec8"/>
+    <text x="1225" y="698" fill="#1b2430">evidence bytes → CID</text>
+    <text x="1225" y="716" fill="#1b2430">+ SHA-256; records saved</text>
+    <text x="1225" y="734" fill="#1b2430">after confirmation</text>
+    <rect x="1131" y="852" width="188" height="44" rx="6" fill="#fff" stroke="#b8bec8"/>
+    <text x="1225" y="870" fill="#1b2430">shipments in,</text>
+    <text x="1225" y="888" fill="#1b2430">proof of delivery out</text>
+  </g>
+
+  <!-- footer -->
+  <text x="40" y="930" class="s">The ledger proves which actor's key signed each step and that evidence is unchanged; keys are held by the server, and it does not prove the medicine is genuine.</text>
+  <text x="40" y="954" class="s">Receipt outcome: the contract records RECEIVED only for an intact seal with identity and condition confirmed; anything else becomes DISPUTED for the auditor.</text>
+</svg>

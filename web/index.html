@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MedTrace</title>
+  <meta name="description" content="Evidence-based custody and integrity checks for medical supply deliveries.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230b5f73'/%3E%3Cpath d='M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <header class="topbar" id="topbar" hidden>
+    <div class="topbar-inner">
+      <a class="brand" href="#/">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 14 14"><path d="M5 0h4v5h5v4H9v5H5V9H0V5h5z" fill="#fff"/></svg>
+        </span>
+        MedTrace
+      </a>
+      <nav class="nav" id="nav"></nav>
+      <div class="whoami">
+        <span class="conn" id="conn">Online</span>
+        <div class="who" id="who"></div>
+        <button class="btn small" id="logout" type="button">Sign out</button>
+        <a class="btn small primary" id="signin" href="#/login" hidden>Sign in</a>
+      </div>
+    </div>
+  </header>
+  <div id="banner" class="banner hidden" role="alert"></div>
+  <main id="view" aria-live="polite"></main>
+  <script src="app.js"></script>
+</body>
+</html>
